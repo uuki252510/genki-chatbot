@@ -18,7 +18,7 @@
       animation: genki-pulse 2.5s infinite;
     }
     #genki-toggle-btn:hover { transform: scale(1.06); box-shadow: 0 6px 24px rgba(0,0,0,0.3); }
-    #genki-toggle-icon { font-size: 26px; line-height: 1; }
+    #genki-toggle-icon { width: 40px; height: 40px; object-fit: contain; }
     #genki-toggle-label { color: #fff; font-weight: bold; font-size: 14px; line-height: 1.3; text-align: left; }
     #genki-toggle-label span { display: block; font-size: 10px; font-weight: normal; opacity: 0.9; }
     @keyframes genki-pulse {
@@ -238,7 +238,7 @@
       </div>
     </div>
     <button id="genki-toggle-btn">
-      <span id="genki-toggle-icon">🌸</span>
+      <img id="genki-toggle-icon" src="https://genki-chatbot.vercel.app/flower.png" alt="花アイコン">
       <div id="genki-toggle-label">AIに聞く<span>なんでもご相談ください</span></div>
       <span id="genki-badge">1</span>
     </button>
@@ -310,7 +310,7 @@
   function closePanel() {
     panel.style.display = 'none';
     toggleBtn.innerHTML = `
-      <span id="genki-toggle-icon">🌸</span>
+      <img id="genki-toggle-icon" src="https://genki-chatbot.vercel.app/flower.png" alt="花アイコン">
       <div id="genki-toggle-label">AIに聞く<span>なんでもご相談ください</span></div>
     `;
   }
