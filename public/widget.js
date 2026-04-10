@@ -143,56 +143,15 @@
   `;
   document.head.appendChild(style);
 
-  // ── FAQ データ ────────────────────────────────────────────
-  const FAQS = [
-    { keywords: ['サービス','内容','どんな','活動','プログラム','一日','流れ'],
-      answer: '【デイサービスげんき】\n日中に施設へ通いながら、入浴・食事・レクリエーション・機能訓練などをご利用いただけます。ご自宅からの送迎も行っています。\n📞 0743-23-1515\n\n【希望の家】\n生活支援・介護サービスを提供する施設です。\n📞 0743-57-0018' },
-    { keywords: ['希望の家','きぼう'],
-      answer: '【希望の家】\n生活支援・介護サービスを提供する施設です。\n\n📍 〒639-1061 奈良県生駒郡安堵町東安堵248-1\n📞 TEL：0743-57-0018\n📠 FAX：0743-57-0017' },
-    { keywords: ['料金','費用','いくら','金額','自己負担','介護保険'],
-      answer: '料金は介護保険の要介護度・ご利用時間・加算等によって異なります。\n\n介護保険の自己負担（1〜3割）＋食費・おやつ代などの実費が発生します。\n\n具体的な金額はケアマネジャーへご相談いただくか、当施設までお問い合わせください。\n\n📞 **0743-23-1515**\n受付時間：9:00〜17:00（月〜土）' },
-    { keywords: ['アクセス','場所','住所','どこ','行き方','地図','駐車場'],
-      answer: '【施設所在地】\n\n🌿 デイサービスげんき / Office元気\n〒636-0012 奈良県生駒郡安堵町東安堵248-8\n📞 0743-23-1515\n\n🏠 希望の家\n〒639-1061 奈良県生駒郡安堵町東安堵248-1\n📞 0743-57-0018\n\nお車でのご来訪が便利です。駐車場もご用意しています。' },
-    { keywords: ['見学','内覧','体験','訪問','予約','申し込み'],
-      answer: '見学・体験利用を随時受け付けております！\n\n①お電話でご連絡\n②ご都合の良い日時を調整\n③スタッフがご案内\n\n見学は無料で、ご家族の方もご一緒にどうぞ。\n\n📞 **0743-23-1515**\n受付時間：9:00〜17:00（月〜土）' },
-    { keywords: ['求人','採用','仕事','働く','介護職','パート','正社員','募集'],
-      answer: '一緒に働く仲間を募集しています！\n\n【募集職種】\n・介護職員（正社員・パート）\n・介護福祉士、ヘルパー など\n\n詳しい条件・状況はお電話にてご確認ください。\n\n📞 **0743-23-1515**\n受付時間：9:00〜17:00（月〜土）' },
-    { keywords: ['電話','連絡','問い合わせ','受付','時間','営業','何時'],
-      answer: '📞 電話番号：**0743-23-1515**\n🕐 受付時間：9:00〜17:00（月〜土）\n\n希望の家：0743-57-0018\n\n時間外はお問い合わせフォームよりご連絡ください。' },
-    { keywords: ['送迎','迎え','自宅','バス'],
-      answer: 'ご自宅から施設への送迎を行っております。\n\n送迎エリアや時間はお住まいの地域によって異なります。\nお気軽にご確認ください。\n\n📞 **0743-23-1515**' },
-    { keywords: ['食事','昼食','ごはん','アレルギー','食形態'],
-      answer: 'デイサービスでは昼食とおやつをご提供しています。\n\n食事形態（普通食・刻み食・ペースト食など）はお体の状態に合わせて対応いたします。\nアレルギーや食事制限もご相談ください。\n\n📞 **0743-23-1515**' },
-    { keywords: ['要介護','要支援','認定','ケアマネ','手続き','申請'],
-      answer: 'デイサービスのご利用には介護保険の認定（要支援1〜2、要介護1〜5）が必要です。\n\n①市区町村窓口で「要介護認定」を申請\n②認定後、ケアマネジャーにご相談\n③ケアプランを作成し利用開始\n\n手続きが分からない方もお気軽にご相談ください。\n\n📞 **0743-23-1515**' },
-  ];
-
-  const RESTRICTED = ['薬','服薬','投薬','病院','診断','治療','症状','緊急','救急','119','危険','自殺','骨折','出血'];
-
+  // クイック返信ボタン（APIと同期）
   const QUICK_REPLIES = [
-    { label: 'サービス内容', value: 'サービス内容を教えてください' },
+    { label: 'サービス内容', value: 'デイサービスのサービス内容を教えてください' },
     { label: '料金について', value: '料金を教えてください' },
     { label: 'アクセス・場所', value: '場所とアクセスを教えてください' },
     { label: '見学したい', value: '見学について教えてください' },
+    { label: '希望の家', value: '希望の家について教えてください' },
     { label: '求人情報', value: '求人情報を教えてください' },
-    { label: '電話で問い合わせ', value: '電話番号を教えてください' },
   ];
-
-  function getAnswer(input) {
-    if (RESTRICTED.some(k => input.includes(k))) {
-      return 'いただいたご質問については、専門スタッフや医療機関へのご確認をお勧めします。\n\nスタッフへのご相談はお電話にてどうぞ。\n📞 0743-23-1515';
-    }
-    let best = null, bestScore = 0;
-    for (const faq of FAQS) {
-      let score = 0;
-      for (const kw of faq.keywords) {
-        if (input.includes(kw)) score += kw.length;
-      }
-      if (score > bestScore) { bestScore = score; best = faq; }
-    }
-    if (bestScore >= 2 && best) return best.answer;
-    return 'ご質問ありがとうございます。\n詳しくはスタッフが丁寧にご案内いたします。\n\n📞 **0743-23-1515**\n受付時間：9:00〜17:00（月〜土）';
-  }
 
   function parseBold(text) {
     return text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
@@ -291,10 +250,19 @@
     typing.style.display = 'flex';
     messages.scrollTop = messages.scrollHeight;
 
-    await new Promise(r => setTimeout(r, 600 + Math.random() * 400));
-    const answer = getAnswer(t);
-    typing.style.display = 'none';
-    addMessage('bot', answer);
+    try {
+      const res = await fetch('https://genki-chatbot.vercel.app/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: t }),
+      });
+      const data = await res.json();
+      typing.style.display = 'none';
+      addMessage('bot', data.answer || 'もう一度お試しください。');
+    } catch (e) {
+      typing.style.display = 'none';
+      addMessage('bot', '通信エラーが発生しました。\nお電話（0743-23-1515）にてお問い合わせください。');
+    }
 
     isLoading = false;
     sendBtn.disabled = false;
