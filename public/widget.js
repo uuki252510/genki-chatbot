@@ -9,13 +9,22 @@
     #genki-chat-widget { position: fixed; bottom: 20px; right: 16px; z-index: 999999; }
 
     #genki-toggle-btn {
-      width: 60px; height: 60px; border-radius: 50%;
+      width: auto; height: auto; border-radius: 50px;
       background: #5a9e6f; border: none; cursor: pointer;
-      font-size: 28px; box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-      display: flex; align-items: center; justify-content: center;
-      transition: transform 0.2s;
+      padding: 12px 18px 12px 14px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      animation: genki-pulse 2.5s infinite;
     }
-    #genki-toggle-btn:hover { transform: scale(1.08); }
+    #genki-toggle-btn:hover { transform: scale(1.06); box-shadow: 0 6px 24px rgba(0,0,0,0.3); }
+    #genki-toggle-icon { font-size: 26px; line-height: 1; }
+    #genki-toggle-label { color: #fff; font-weight: bold; font-size: 14px; line-height: 1.3; text-align: left; }
+    #genki-toggle-label span { display: block; font-size: 10px; font-weight: normal; opacity: 0.9; }
+    @keyframes genki-pulse {
+      0%,100% { box-shadow: 0 4px 20px rgba(90,158,111,0.4); }
+      50% { box-shadow: 0 4px 28px rgba(90,158,111,0.75); }
+    }
 
     #genki-badge {
       position: absolute; top: -2px; right: -2px;
@@ -228,7 +237,11 @@
         <div id="genki-disclaimer">このAIは一般的なご案内を行います。医療・介護判断はスタッフへご確認ください。</div>
       </div>
     </div>
-    <button id="genki-toggle-btn">💬<span id="genki-badge">1</span></button>
+    <button id="genki-toggle-btn">
+      <span id="genki-toggle-icon">🌸</span>
+      <div id="genki-toggle-label">AIに聞く<span>なんでもご相談ください</span></div>
+      <span id="genki-badge">1</span>
+    </button>
   `;
   document.body.appendChild(root);
 
@@ -288,21 +301,25 @@
     root.querySelectorAll('.genki-qr').forEach(b => b.disabled = false);
   }
 
+  function openPanel() {
+    panel.style.display = 'flex';
+    badge.style.display = 'none';
+    toggleBtn.innerHTML = '<span style="color:#fff;font-size:22px;font-weight:bold;padding:4px 6px">✕ 閉じる</span>';
+    setTimeout(() => input.focus(), 200);
+  }
+  function closePanel() {
+    panel.style.display = 'none';
+    toggleBtn.innerHTML = `
+      <span id="genki-toggle-icon">🌸</span>
+      <div id="genki-toggle-label">AIに聞く<span>なんでもご相談ください</span></div>
+    `;
+  }
+
   toggleBtn.addEventListener('click', () => {
-    const open = panel.style.display === 'none';
-    panel.style.display = open ? 'flex' : 'none';
-    toggleBtn.querySelector('span:first-child') || null;
-    badge.style.display = open ? 'none' : 'none';
-    if (open) { toggleBtn.textContent = ''; toggleBtn.innerHTML = '<span style="color:#fff;font-size:22px;font-weight:bold">×</span>'; }
-    else { toggleBtn.textContent = ''; toggleBtn.innerHTML = '💬'; }
-    if (open) setTimeout(() => input.focus(), 200);
+    if (panel.style.display === 'none') openPanel(); else closePanel();
   });
 
-  closeBtn.addEventListener('click', () => {
-    panel.style.display = 'none';
-    toggleBtn.textContent = '';
-    toggleBtn.innerHTML = '💬';
-  });
+  closeBtn.addEventListener('click', closePanel);
 
   sendBtn.addEventListener('click', () => send());
   input.addEventListener('keydown', e => {
